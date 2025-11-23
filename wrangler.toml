@@ -1,0 +1,11 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "linkedin-post-creator"
+type = "javascript"
+compatibility_date = "2025-11-23"
+
+[env.production]
+
+[[sites]]
+account_id = ""
+bucket = "."
+include = ["index.html", "*.html", "*.css", "*.js", "*.json"]
