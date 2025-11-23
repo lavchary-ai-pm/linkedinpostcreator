@@ -1,11 +1,9 @@
-#:schema node_modules/wrangler/config-schema.json
 name = "linkedin-post-creator"
-type = "javascript"
+main = "index.html"
 compatibility_date = "2025-11-23"
 
 [env.production]
 
-[[sites]]
-account_id = ""
-bucket = "."
-include = ["index.html", "*.html", "*.css", "*.js", "*.json"]
+[assets]
+directory = "."
+include = ["*.html", "*.css", "*.js", "*.json", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.svg", "*.ico", "*.woff", "*.woff2", "*.ttf"]
