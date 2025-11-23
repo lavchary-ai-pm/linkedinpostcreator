@@ -1,9 +1,2 @@
 name = "linkedin-post-creator"
-main = "index.html"
-compatibility_date = "2025-11-23"
-
-[env.production]
-
-[assets]
-directory = "."
-include = ["*.html", "*.css", "*.js", "*.json", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.svg", "*.ico", "*.woff", "*.woff2", "*.ttf"]
+pages_build_output_dir = "."
