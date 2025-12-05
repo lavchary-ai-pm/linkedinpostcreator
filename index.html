@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkedIn Post Creator</title>
     <style>
+        :root {
+            --coral-primary: #D946A6;
+            --coral-hover: #C72E95;
+            --black-primary: #0A0A0A;
+            --cream-bg: #F8F6F3;
+            --warm-white: #FFFEFB;
+            --slate-text: #626C71;
+            --slate-light: #A7B0B5;
+            --border-subtle: #E5E7E8;
+            --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,30 +24,19 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: var(--font-display);
+            background-color: var(--cream-bg);
+            color: var(--black-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: url('Blurred_image.avif') center/cover fixed;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            background: #e8dfd6;
+            background: white;
             border-radius: 20px;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
             width: 100%;
@@ -45,32 +46,46 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
-            z-index: 1;
         }
 
         .header {
-            background: #4a4a4a;
-            color: #f5f1ed;
-            padding: 20px 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            height: 60px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .header-accent {
+            height: 4px;
+            background: var(--coral-primary);
+            border-radius: 0;
+        }
+
+        .header-content {
+            padding: 16px 30px;
+            background: white;
             text-align: center;
         }
 
-        .header h1 {
+        .header-title {
             font-size: 28px;
-            margin-bottom: 4px;
             font-weight: 700;
+            line-height: 1.3;
+            color: var(--black-primary);
+            margin-bottom: 4px;
         }
 
-        .header p {
+        .header-description {
             font-size: 14px;
+            color: var(--slate-text);
+            line-height: 1.6;
             opacity: 0.95;
         }
 
         .content {
             display: flex;
             gap: 20px;
-            padding: 25px;
+            padding: 20px 25px 25px 25px;
             flex: 1;
             overflow-y: auto;
         }
@@ -82,21 +97,6 @@
             gap: 16px;
         }
 
-        .output-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .post-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-height: 0;
-        }
-
         .form-group {
             display: flex;
             flex-direction: column;
@@ -104,29 +104,29 @@
         }
 
         .form-group label {
-            font-weight: 600;
-            color: #333;
             font-size: 13px;
+            font-weight: 600;
+            color: var(--black-primary);
         }
 
         input[type="text"],
         select {
             padding: 14px;
-            border: 2px solid #d4cac1;
+            border: 2px solid var(--border-subtle);
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
-            color: #333;
+            color: var(--black-primary);
             transition: all 0.3s ease;
         }
 
         input[type="text"]:focus,
         select:focus {
             outline: none;
-            border-color: #4a4a4a;
+            border-color: var(--coral-primary);
             background: white;
-            box-shadow: 0 0 0 4px rgba(74, 74, 74, 0.1);
+            box-shadow: 0 0 0 4px rgba(217, 70, 166, 0.1);
         }
 
         input[type="text"]::placeholder {
@@ -136,17 +136,11 @@
         select {
             cursor: pointer;
             appearance: none;
-            padding-right: 36px;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a4a4a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D946A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 10px center;
             background-size: 20px;
             padding-right: 36px;
-        }
-
-        select option {
-            color: #333;
-            background: white;
         }
 
         .button-group {
@@ -156,9 +150,18 @@
         }
 
         .copy-btn-group {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 6px;
+        }
+
+        .copy-btn {
+            grid-column: 2;
+        }
+
+        .clear-btn {
+            grid-column: 1;
         }
 
         button {
@@ -175,15 +178,15 @@
         }
 
         #generateBtn {
-            background: #1a1a1a;
+            background: var(--coral-primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(26, 26, 26, 0.4);
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
         }
 
         #generateBtn:hover:not(:disabled) {
-            background: #0d0d0d;
+            background: var(--coral-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 26, 26, 0.6);
+            box-shadow: 0 6px 20px rgba(217, 70, 166, 0.4);
         }
 
         #generateBtn:disabled {
@@ -192,44 +195,113 @@
         }
 
         .clear-btn {
-            background: #333333;
+            background: var(--black-primary);
             color: white;
-            border: 2px solid #1a1a1a;
+            border: 2px solid var(--black-primary);
         }
 
         .clear-btn:hover {
-            background: #1a1a1a;
+            background: var(--coral-hover);
+            border-color: var(--coral-hover);
             transform: none;
+        }
+
+        .copy-btn {
+            background: var(--coral-primary);
+            color: white;
+            padding: 12px 20px;
+            font-size: 13px;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn:hover:not(:disabled) {
+            background: var(--coral-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 70, 166, 0.4);
+        }
+
+        .copy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .copy-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .output-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .post-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 0;
         }
 
         .output-header {
             font-size: 13px;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
+            color: var(--black-primary);
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .post-container {
-            background: #faf8f5;
+            background: white;
             border-radius: 12px;
             padding: 20px;
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            border: 1px solid #d4cac1;
+            border: 1px solid var(--border-subtle);
             word-wrap: break-word;
             user-select: text;
             -webkit-user-select: text;
+            position: relative;
         }
 
         .post-container:empty {
-            background: #faf8f5;
+            background: white;
         }
 
-        .placeholder-text {
-            color: #a0826d;
-            text-align: center;
-            padding: 40px 20px;
+
+        .post-content-editable {
+            color: var(--black-primary);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: break-word;
+            font-size: 14px;
+            font-family: var(--font-display);
+            outline: none;
+            min-height: 100px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .post-content-editable:focus {
+            outline: none;
+        }
+
+        .post-content-editable:empty:before {
+            content: attr(data-placeholder);
+            color: var(--slate-light);
         }
 
         .post-container::-webkit-scrollbar {
@@ -237,27 +309,33 @@
         }
 
         .post-container::-webkit-scrollbar-track {
-            background: #e8dfd6;
+            background: var(--cream-bg);
             border-radius: 10px;
         }
 
         .post-container::-webkit-scrollbar-thumb {
-            background: #4a4a4a;
+            background: var(--coral-primary);
             border-radius: 10px;
         }
 
         .post-container::-webkit-scrollbar-thumb:hover {
-            background: #2a2a2a;
+            background: var(--coral-hover);
+        }
+
+        .placeholder-text {
+            color: var(--slate-text);
+            text-align: center;
+            padding: 40px 20px;
         }
 
         .post-content {
-            color: #333;
+            color: var(--black-primary);
             line-height: 1.6;
             white-space: pre-wrap;
             word-wrap: break-word;
             word-break: break-word;
             font-size: 14px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: var(--font-display);
             user-select: text;
             -webkit-user-select: text;
             cursor: text;
@@ -270,7 +348,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            color: #4a4a4a;
+            color: var(--coral-primary);
             font-size: 14px;
             height: 100%;
         }
@@ -279,7 +357,7 @@
             display: inline-block;
             width: 8px;
             height: 8px;
-            background: #4a4a4a;
+            background: var(--coral-primary);
             border-radius: 50%;
             animation: bounce 1.4s infinite;
         }
@@ -327,38 +405,6 @@
             border-left: 4px solid #3c3;
         }
 
-        .copy-btn {
-            background: #1a1a1a;
-            color: white;
-            padding: 12px 20px;
-            font-size: 13px;
-            flex: 1;
-            box-shadow: 0 4px 15px rgba(26, 26, 26, 0.4);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .copy-btn:hover:not(:disabled) {
-            background: #0d0d0d;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 26, 26, 0.6);
-        }
-
-        .copy-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .copy-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
@@ -375,11 +421,11 @@
                 min-height: 400px;
             }
 
-            .header {
+            .header-content {
                 padding: 30px 20px;
             }
 
-            .header h1 {
+            .header-title {
                 font-size: 28px;
             }
         }
@@ -387,19 +433,22 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📱 LinkedIn Post Creator</h1>
-            <p>Generate engaging LinkedIn posts tailored to your audience</p>
+        <div class="header"></div>
+        <div class="header-accent"></div>
+
+        <div class="header-content">
+            <h1 class="header-title">📱 LinkedIn Post Creator</h1>
+            <p class="header-description">Generate engaging LinkedIn posts tailored to your audience</p>
         </div>
 
         <div class="content">
             <div class="input-panel">
                 <div class="form-group">
                     <label for="topic">Topic</label>
-                    <input 
-                        type="text" 
-                        id="topic" 
-                        placeholder="e.g., AI in recruiting, Remote work culture, Leadership lessons..."
+                    <input
+                        type="text"
+                        id="topic"
+                        placeholder="e.g., AI tools, Personal branding..."
                         autocomplete="off"
                     >
                 </div>
@@ -407,7 +456,7 @@
                 <div class="form-group">
                     <label for="audience">Target Audience</label>
                     <select id="audience">
-                        <option value="">Select an audience</option>
+                        <option value="">Select audience</option>
                         <option value="tech-professionals">Tech Professionals</option>
                         <option value="entrepreneurs">Entrepreneurs & Founders</option>
                         <option value="marketers">Marketing Professionals</option>
@@ -423,19 +472,22 @@
 
                 <div class="button-group">
                     <button id="generateBtn" onclick="generatePost()">Generate Post</button>
+                </div>
+
+                <div class="copy-btn-group">
                     <button class="clear-btn" id="clearBtn" onclick="clearForm()">Clear</button>
-                    <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" disabled>📋 Copy Post</button>
+                    <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" disabled>Copy</button>
                 </div>
 
                 <div id="status" style="display: none;"></div>
             </div>
 
             <div class="output-panel">
-                <div class="output-header">📝 Generated Post</div>
                 <div class="post-wrapper">
+                    <div class="output-header">Generated Post</div>
                     <div class="post-container" id="postContainer">
-                        <div style="color: #a0826d; text-align: center; padding: 40px 20px;">
-                            Fill in the topic and select your audience, then click "Generate Post" to create your LinkedIn post.
+                        <div class="placeholder-text">
+                            Enter a topic and select your target audience to generate a LinkedIn post
                         </div>
                     </div>
                 </div>
@@ -444,7 +496,7 @@
     </div>
 
     <script>
-        const WEBHOOK_URL = 'http://localhost:5678/webhook/72b8f2de-5c15-4a61-ad9c-7ebb80b74f48';
+        const WEBHOOK_URL = 'https://lcharyfire1.app.n8n.cloud/webhook/b4aad059-001b-44cf-88bc-391451e2fc94';
 
         const topicInput = document.getElementById('topic');
         const audienceSelect = document.getElementById('audience');
@@ -454,7 +506,6 @@
         const copyBtn = document.getElementById('copyBtn');
         const statusDiv = document.getElementById('status');
 
-        // Generate post on Enter key
         topicInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -476,7 +527,6 @@
                 return;
             }
 
-            // Show loading state
             postContainer.innerHTML = `
                 <div class="loading">
                     <span></span>
@@ -503,9 +553,9 @@
                 }
 
                 const post = await response.text();
-                
+
                 postContainer.innerHTML = `
-                    <div class="post-content">${escapeHtml(post)}</div>
+                    <div class="post-content-editable" contenteditable="true">${escapeHtml(post)}</div>
                 `;
                 copyBtn.disabled = false;
 
@@ -528,8 +578,8 @@
             topicInput.value = '';
             audienceSelect.value = '';
             postContainer.innerHTML = `
-                <div style="color: #a0826d; text-align: center; padding: 40px 20px;">
-                    Fill in the topic and select your audience, then click "Generate Post" to create your LinkedIn post.
+                <div class="placeholder-text">
+                    Enter a topic and select your target audience to generate a LinkedIn post
                 </div>
             `;
             copyBtn.disabled = true;
@@ -541,7 +591,7 @@
             statusDiv.className = type === 'error' ? 'error-message' : 'success-message';
             statusDiv.textContent = message;
             statusDiv.style.display = 'block';
-            
+
             if (type === 'success') {
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
@@ -550,27 +600,25 @@
         }
 
         function copyToClipboard() {
-            const postElement = document.querySelector('.post-content');
+            const postElement = document.querySelector('.post-content-editable');
             if (!postElement) {
                 showStatus('No post to copy', 'error');
                 return;
             }
-            
+
             const postText = postElement.innerText || postElement.textContent;
-            
-            // Use modern clipboard API
+
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(postText).then(() => {
                     showStatus('✓ Post copied to clipboard!', 'success');
                 }).catch(() => {
-                    // Fallback to older method
                     copyUsingExecCommand(postText);
                 });
             } else {
-                // Fallback for older browsers
                 copyUsingExecCommand(postText);
             }
         }
+
 
         function copyUsingExecCommand(text) {
             const textarea = document.createElement('textarea');
@@ -594,7 +642,6 @@
             return div.innerHTML;
         }
 
-        // Focus input on load
         topicInput.focus();
     </script>
 </body>
