@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn Post Creator</title>
+    <title>LinkedIn Post Creator - AI-Powered Posts</title>
     <style>
         :root {
-            --coral-primary: #D946A6;
-            --coral-hover: #C72E95;
-            --black-primary: #0A0A0A;
-            --cream-bg: #F8F6F3;
+            --brown-primary: #4A3C31;
+            --brown-hover: #3A2E25;
+            --brown-light: rgba(74, 60, 49, 0.08);
+            --brown-accent: #6B5B4F;
+            --gold-accent: #C9A962;
+            --black-primary: #1A1A1A;
+            --cream-bg: #FAF8F5;
             --warm-white: #FFFEFB;
-            --slate-text: #626C71;
-            --slate-light: #A7B0B5;
-            --border-subtle: #E5E7E8;
-            --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --slate-text: #5A5A5A;
+            --slate-light: #9A9A9A;
+            --border-subtle: #E8E4E0;
+            --success: #22C55E;
+            --error: #EF4444;
         }
 
         * {
@@ -24,9 +28,11 @@
         }
 
         body {
-            font-family: var(--font-display);
-            background-color: var(--cream-bg);
-            color: var(--black-primary);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--cream-bg);
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(74, 60, 49, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(201, 169, 98, 0.05) 0%, transparent 50%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -36,427 +42,593 @@
         }
 
         .container {
-            background: white;
+            background: var(--warm-white);
             border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            box-shadow:
+                0 4px 24px rgba(74, 60, 49, 0.08),
+                0 1px 3px rgba(74, 60, 49, 0.04);
             width: 100%;
-            max-width: 1100px;
-            height: 90vh;
-            max-height: 800px;
+            max-width: 940px;
+            min-height: 620px;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            border: 1px solid var(--border-subtle);
         }
 
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            height: 60px;
-            border-radius: 20px 20px 0 0;
+            background: linear-gradient(135deg, var(--brown-primary) 0%, var(--brown-hover) 100%);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 169, 98, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -60%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header__icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header__content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .header__subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .header__badge {
+            background: var(--gold-accent);
+            color: var(--brown-hover);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content */
+        .content {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Input Panel */
+        .input-panel {
+            padding: 28px;
+            background: linear-gradient(180deg, var(--warm-white) 0%, var(--cream-bg) 100%);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             position: relative;
         }
 
-        .header-accent {
-            height: 4px;
-            background: var(--coral-primary);
-            border-radius: 0;
+        .input-panel::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23E8E4E0' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%23E8E4E0' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%23E8E4E0'/%3E%3C/svg%3E") no-repeat center;
+            opacity: 0.5;
+            pointer-events: none;
         }
 
-        .header-content {
-            padding: 16px 30px;
-            background: white;
-            text-align: center;
-        }
-
-        .header-title {
-            font-size: 28px;
+        .section-label {
+            font-size: 11px;
             font-weight: 700;
-            line-height: 1.3;
-            color: var(--black-primary);
-            margin-bottom: 4px;
-        }
-
-        .header-description {
-            font-size: 14px;
-            color: var(--slate-text);
-            line-height: 1.6;
-            opacity: 0.95;
-        }
-
-        .content {
+            color: var(--brown-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: -8px;
             display: flex;
-            gap: 20px;
-            padding: 20px 25px 25px 25px;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::after {
+            content: '';
             flex: 1;
-            overflow-y: auto;
-        }
-
-        .input-panel {
-            flex: 0 0 35%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-subtle) 0%, transparent 100%);
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 10px;
         }
 
-        .form-group label {
+        .form-label {
             font-size: 13px;
             font-weight: 600;
             color: var(--black-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        input[type="text"],
-        select {
-            padding: 14px;
+        .form-label__icon {
+            width: 28px;
+            height: 28px;
+            background: var(--brown-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .input-field {
+            padding: 14px 16px;
             border: 2px solid var(--border-subtle);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 14px;
             font-family: inherit;
-            background: white;
+            background: var(--warm-white);
             color: var(--black-primary);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
-        input[type="text"]:focus,
-        select:focus {
+        .input-field:focus {
             outline: none;
-            border-color: var(--coral-primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(217, 70, 166, 0.1);
+            border-color: var(--brown-primary);
+            box-shadow: 0 0 0 4px var(--brown-light);
         }
 
-        input[type="text"]::placeholder {
-            color: #999;
+        .input-field::placeholder {
+            color: var(--slate-light);
         }
 
-        select {
+        /* Select Field */
+        .select-field {
+            padding: 14px 16px;
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--warm-white);
+            color: var(--black-primary);
+            transition: all 0.2s ease;
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D946A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239A9A9A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-            padding-right: 36px;
+            background-position: right 14px center;
+            background-size: 16px;
+            padding-right: 44px;
         }
 
-        .button-group {
+        .select-field:focus {
+            outline: none;
+            border-color: var(--brown-primary);
+            box-shadow: 0 0 0 4px var(--brown-light);
+        }
+
+        .select-field option {
+            padding: 10px;
+        }
+
+        /* Buttons */
+        .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 6px;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
         }
 
-        .copy-btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .copy-btn {
-            grid-column: 2;
-        }
-
-        .clear-btn {
-            grid-column: 1;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px 20px;
+        .btn {
+            padding: 14px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 13px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        #generateBtn {
-            background: var(--coral-primary);
+        .btn--primary {
+            background: linear-gradient(135deg, var(--brown-primary) 0%, var(--brown-hover) 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
+            box-shadow: 0 4px 12px rgba(74, 60, 49, 0.25);
         }
 
-        #generateBtn:hover:not(:disabled) {
-            background: var(--coral-hover);
+        .btn--primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(217, 70, 166, 0.4);
+            box-shadow: 0 6px 20px rgba(74, 60, 49, 0.3);
         }
 
-        #generateBtn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .clear-btn {
-            background: var(--black-primary);
-            color: white;
-            border: 2px solid var(--black-primary);
-        }
-
-        .clear-btn:hover {
-            background: var(--coral-hover);
-            border-color: var(--coral-hover);
-            transform: none;
-        }
-
-        .copy-btn {
-            background: var(--coral-primary);
-            color: white;
-            padding: 12px 20px;
-            font-size: 13px;
-            flex: 1;
-            box-shadow: 0 4px 15px rgba(217, 70, 166, 0.3);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .copy-btn:hover:not(:disabled) {
-            background: var(--coral-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(217, 70, 166, 0.4);
-        }
-
-        .copy-btn:disabled {
+        .btn--primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
 
-        .copy-btn:active:not(:disabled) {
-            transform: translateY(0);
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
+        .btn--secondary {
+            background: var(--black-primary);
+            color: white;
+        }
+
+        .btn--secondary:hover:not(:disabled) {
+            background: #2a2a2a;
+        }
+
+        .btn--outline {
+            background: var(--warm-white);
+            color: var(--brown-primary);
+            border: 2px solid var(--brown-primary);
+        }
+
+        .btn--outline:hover:not(:disabled) {
+            background: var(--brown-light);
+        }
+
+        .btn--outline:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Output Panel */
         .output-panel {
-            flex: 1;
+            padding: 28px;
+            background: var(--cream-bg);
             display: flex;
             flex-direction: column;
-            gap: 0;
-        }
-
-        .post-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-height: 0;
-        }
-
-        .output-header {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--black-primary);
-            margin-bottom: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .post-container {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            border: 1px solid var(--border-subtle);
-            word-wrap: break-word;
-            user-select: text;
-            -webkit-user-select: text;
+            overflow: hidden;
             position: relative;
         }
 
-        .post-container:empty {
-            background: white;
+        .output-panel::before {
+            content: '';
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10,50 Q30,20 50,50 T90,50' fill='none' stroke='%23E8E4E0' stroke-width='2'/%3E%3Cpath d='M10,60 Q30,30 50,60 T90,60' fill='none' stroke='%23E8E4E0' stroke-width='1'/%3E%3Cpath d='M10,70 Q30,40 50,70 T90,70' fill='none' stroke='%23E8E4E0' stroke-width='1'/%3E%3C/svg%3E") no-repeat center;
+            opacity: 0.6;
+            pointer-events: none;
         }
 
+        .output-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
 
-        .post-content-editable {
+        .output-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--brown-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .output-title__dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold-accent);
+            border-radius: 50%;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: var(--slate-light);
+            background: var(--warm-white);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .output-container {
+            flex: 1;
+            background: var(--warm-white);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            padding: 24px;
+            overflow-y: auto;
+            min-height: 300px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(74, 60, 49, 0.04);
+        }
+
+        .output-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .output-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .output-container::-webkit-scrollbar-thumb {
+            background: var(--brown-accent);
+            border-radius: 10px;
+        }
+
+        /* Placeholder */
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--slate-light);
+            padding: 40px;
+        }
+
+        .placeholder__graphic {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='15' y='20' width='70' height='60' rx='4' fill='none' stroke='%23E8E4E0' stroke-width='2'/%3E%3Cline x1='25' y1='35' x2='75' y2='35' stroke='%23D4D0CC' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='25' y1='45' x2='65' y2='45' stroke='%23D4D0CC' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='25' y1='55' x2='55' y2='55' stroke='%23D4D0CC' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='25' y1='65' x2='45' y2='65' stroke='%23D4D0CC' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='75' cy='70' r='15' fill='%23C9A962' opacity='0.3'/%3E%3Cpath d='M70,70 l5,5 l10,-10' stroke='%234A3C31' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        .placeholder__text {
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 220px;
+        }
+
+        /* Post Content */
+        .post-content {
             color: var(--black-primary);
-            line-height: 1.6;
+            line-height: 1.8;
             white-space: pre-wrap;
             word-wrap: break-word;
-            word-break: break-word;
             font-size: 14px;
-            font-family: var(--font-display);
             outline: none;
-            min-height: 100px;
-            padding: 0;
-            margin: 0;
+            min-height: 200px;
         }
 
-        .post-content-editable:focus {
+        .post-content:focus {
             outline: none;
         }
 
-        .post-content-editable:empty:before {
+        .post-content:empty:before {
             content: attr(data-placeholder);
             color: var(--slate-light);
         }
 
-        .post-container::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .post-container::-webkit-scrollbar-track {
-            background: var(--cream-bg);
-            border-radius: 10px;
-        }
-
-        .post-container::-webkit-scrollbar-thumb {
-            background: var(--coral-primary);
-            border-radius: 10px;
-        }
-
-        .post-container::-webkit-scrollbar-thumb:hover {
-            background: var(--coral-hover);
-        }
-
-        .placeholder-text {
-            color: var(--slate-text);
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .post-content {
-            color: var(--black-primary);
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            word-break: break-word;
-            font-size: 14px;
-            font-family: var(--font-display);
-            user-select: text;
-            -webkit-user-select: text;
-            cursor: text;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Loading */
         .loading {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            color: var(--coral-primary);
-            font-size: 14px;
             height: 100%;
+            gap: 20px;
         }
 
-        .loading span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: var(--coral-primary);
+        .loading__spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--brown-primary);
             border-radius: 50%;
-            animation: bounce 1.4s infinite;
+            animation: spin 1s linear infinite;
         }
 
-        .loading span:nth-child(1) {
-            animation-delay: 0s;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .loading span:nth-child(2) {
-            animation-delay: 0.2s;
+        .loading__text {
+            font-size: 14px;
+            color: var(--slate-text);
         }
 
-        .loading span:nth-child(3) {
-            animation-delay: 0.4s;
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
-        @keyframes bounce {
-            0%, 80%, 100% {
-                transform: translateY(0);
-                opacity: 0.5;
-            }
-            40% {
-                transform: translateY(-8px);
-                opacity: 1;
-            }
+        .toast--visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-size: 13px;
-            border-left: 4px solid #c33;
+        .toast--success {
+            background: var(--success);
+            color: white;
         }
 
-        .success-message {
-            background: #efe;
-            color: #3c3;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-size: 13px;
-            border-left: 4px solid #3c3;
+        .toast--error {
+            background: var(--error);
+            color: white;
         }
 
+        /* Footer */
+        .footer {
+            padding: 14px 28px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--slate-light);
+            background: var(--warm-white);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer a {
+            color: var(--brown-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile */
         @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                max-height: 100vh;
+                height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+                border: none;
+            }
+
             .content {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
             }
 
             .input-panel {
-                flex: 0 0 auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-subtle);
+                padding: 20px;
+            }
+
+            .input-panel::before {
+                display: none;
+            }
+
+            .btn-group {
+                margin-top: 0;
+                padding-top: 16px;
             }
 
             .output-panel {
-                flex: 1;
-                min-height: 400px;
+                padding: 20px;
             }
 
-            .header-content {
-                padding: 30px 20px;
+            .output-panel::before {
+                display: none;
             }
 
-            .header-title {
-                font-size: 28px;
+            .output-container {
+                min-height: 250px;
+            }
+
+            .header__badge {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header"></div>
-        <div class="header-accent"></div>
-
-        <div class="header-content">
-            <h1 class="header-title">📱 LinkedIn Post Creator</h1>
-            <p class="header-description">Generate engaging LinkedIn posts tailored to your audience</p>
+        <div class="header">
+            <div class="header__icon">✍️</div>
+            <div class="header__content">
+                <h1 class="header__title">LinkedIn Post Creator</h1>
+                <p class="header__subtitle">Generate engaging posts tailored to your audience</p>
+            </div>
+            <span class="header__badge">AI Powered</span>
         </div>
 
         <div class="content">
             <div class="input-panel">
+                <span class="section-label">Create Your Post</span>
+
                 <div class="form-group">
-                    <label for="topic">Topic</label>
+                    <label class="form-label" for="topic">
+                        <span class="form-label__icon">💡</span>
+                        Topic
+                    </label>
                     <input
                         type="text"
                         id="topic"
-                        placeholder="e.g., AI tools, Personal branding..."
+                        class="input-field"
+                        placeholder="e.g., AI tools for productivity"
                         autocomplete="off"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="audience">Target Audience</label>
-                    <select id="audience">
-                        <option value="">Select audience</option>
+                    <label class="form-label" for="audience">
+                        <span class="form-label__icon">👥</span>
+                        Target Audience
+                    </label>
+                    <select id="audience" class="select-field">
+                        <option value="">Select your audience</option>
                         <option value="tech-professionals">Tech Professionals</option>
                         <option value="entrepreneurs">Entrepreneurs & Founders</option>
                         <option value="marketers">Marketing Professionals</option>
@@ -470,30 +642,40 @@
                     </select>
                 </div>
 
-                <div class="button-group">
-                    <button id="generateBtn" onclick="generatePost()">Generate Post</button>
+                <div class="btn-group">
+                    <button id="generateBtn" class="btn btn--primary" onclick="generatePost()">
+                        <span>✨</span> Generate Post
+                    </button>
+                    <div class="btn-row">
+                        <button id="clearBtn" class="btn btn--secondary" onclick="clearForm()">Clear</button>
+                        <button id="copyBtn" class="btn btn--outline" onclick="copyToClipboard()" disabled>Copy</button>
+                    </div>
                 </div>
-
-                <div class="copy-btn-group">
-                    <button class="clear-btn" id="clearBtn" onclick="clearForm()">Clear</button>
-                    <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" disabled>Copy</button>
-                </div>
-
-                <div id="status" style="display: none;"></div>
             </div>
 
             <div class="output-panel">
-                <div class="post-wrapper">
-                    <div class="output-header">Generated Post</div>
-                    <div class="post-container" id="postContainer">
-                        <div class="placeholder-text">
-                            Enter a topic and select your target audience to generate a LinkedIn post
-                        </div>
+                <div class="output-header">
+                    <span class="output-title">
+                        <span class="output-title__dot"></span>
+                        Generated Post
+                    </span>
+                    <span class="char-count" id="charCount"></span>
+                </div>
+                <div class="output-container" id="outputContainer">
+                    <div class="placeholder">
+                        <div class="placeholder__graphic"></div>
+                        <p class="placeholder__text">Enter a topic and select your audience to generate a LinkedIn post</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="footer">
+            Built by <a href="https://lavchary.com" target="_blank">Lavanya Chary</a> · Powered by AI
+        </div>
     </div>
+
+    <div class="toast" id="toast"></div>
 
     <script>
         const WEBHOOK_URL = 'https://lcharyfire1.app.n8n.cloud/webhook/b4aad059-001b-44cf-88bc-391451e2fc94';
@@ -502,9 +684,10 @@
         const audienceSelect = document.getElementById('audience');
         const generateBtn = document.getElementById('generateBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const postContainer = document.getElementById('postContainer');
         const copyBtn = document.getElementById('copyBtn');
-        const statusDiv = document.getElementById('status');
+        const outputContainer = document.getElementById('outputContainer');
+        const charCount = document.getElementById('charCount');
+        const toast = document.getElementById('toast');
 
         topicInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -513,28 +696,48 @@
             }
         });
 
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = `toast toast--${type} toast--visible`;
+
+            setTimeout(() => {
+                toast.classList.remove('toast--visible');
+            }, 3000);
+        }
+
+        function updateCharCount(text) {
+            if (text) {
+                const count = text.length;
+                charCount.textContent = `${count} characters`;
+            } else {
+                charCount.textContent = '';
+            }
+        }
+
         async function generatePost() {
             const topic = topicInput.value.trim();
             const audience = audienceSelect.value;
 
             if (!topic) {
-                showStatus('Please enter a topic', 'error');
+                showToast('Please enter a topic', 'error');
+                topicInput.focus();
                 return;
             }
 
             if (!audience) {
-                showStatus('Please select a target audience', 'error');
+                showToast('Please select a target audience', 'error');
+                audienceSelect.focus();
                 return;
             }
 
-            postContainer.innerHTML = `
+            outputContainer.innerHTML = `
                 <div class="loading">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <div class="loading__spinner"></div>
+                    <p class="loading__text">Creating your post...</p>
                 </div>
             `;
             generateBtn.disabled = true;
+            charCount.textContent = '';
 
             try {
                 const response = await fetch(WEBHOOK_URL, {
@@ -554,21 +757,30 @@
 
                 const post = await response.text();
 
-                postContainer.innerHTML = `
-                    <div class="post-content-editable" contenteditable="true">${escapeHtml(post)}</div>
+                outputContainer.innerHTML = `
+                    <div class="post-content" contenteditable="true" data-placeholder="Your post will appear here...">${escapeHtml(post)}</div>
                 `;
+
+                updateCharCount(post);
                 copyBtn.disabled = false;
 
-                showStatus('Post generated successfully!', 'success');
+                // Add input listener for char count updates
+                const postContent = outputContainer.querySelector('.post-content');
+                postContent.addEventListener('input', () => {
+                    updateCharCount(postContent.innerText);
+                });
+
+                showToast('Post generated successfully!', 'success');
 
             } catch (error) {
                 console.error('Error:', error);
-                postContainer.innerHTML = `
-                    <div class="error-message">
-                        Sorry, there was an error generating your post. Please try again.
+                outputContainer.innerHTML = `
+                    <div class="placeholder">
+                        <div class="placeholder__graphic"></div>
+                        <p class="placeholder__text">Something went wrong. Please try again.</p>
                     </div>
                 `;
-                showStatus('Error: ' + error.message, 'error');
+                showToast('Error generating post. Please try again.', 'error');
             } finally {
                 generateBtn.disabled = false;
             }
@@ -577,32 +789,22 @@
         function clearForm() {
             topicInput.value = '';
             audienceSelect.value = '';
-            postContainer.innerHTML = `
-                <div class="placeholder-text">
-                    Enter a topic and select your target audience to generate a LinkedIn post
+
+            outputContainer.innerHTML = `
+                <div class="placeholder">
+                    <div class="placeholder__graphic"></div>
+                    <p class="placeholder__text">Enter a topic and select your audience to generate a LinkedIn post</p>
                 </div>
             `;
             copyBtn.disabled = true;
-            statusDiv.style.display = 'none';
+            charCount.textContent = '';
             topicInput.focus();
         }
 
-        function showStatus(message, type) {
-            statusDiv.className = type === 'error' ? 'error-message' : 'success-message';
-            statusDiv.textContent = message;
-            statusDiv.style.display = 'block';
-
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 3000);
-            }
-        }
-
         function copyToClipboard() {
-            const postElement = document.querySelector('.post-content-editable');
+            const postElement = outputContainer.querySelector('.post-content');
             if (!postElement) {
-                showStatus('No post to copy', 'error');
+                showToast('No post to copy', 'error');
                 return;
             }
 
@@ -610,7 +812,7 @@
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(postText).then(() => {
-                    showStatus('✓ Post copied to clipboard!', 'success');
+                    showToast('Copied to clipboard!', 'success');
                 }).catch(() => {
                     copyUsingExecCommand(postText);
                 });
@@ -618,7 +820,6 @@
                 copyUsingExecCommand(postText);
             }
         }
-
 
         function copyUsingExecCommand(text) {
             const textarea = document.createElement('textarea');
@@ -629,9 +830,9 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                showStatus('✓ Post copied to clipboard!', 'success');
+                showToast('Copied to clipboard!', 'success');
             } catch (err) {
-                showStatus('Failed to copy post', 'error');
+                showToast('Failed to copy', 'error');
             }
             document.body.removeChild(textarea);
         }
